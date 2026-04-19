@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Иловаи Категория - BookHub{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto py-12">
+    <a href="{% url 'list_category' %}" class="flex items-center text-sm text-gray-500 hover:text-indigo-400 transition mb-8 group">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Бозгашт ба категорияҳо
+    </a>
+
+    <div class="bg-slate-800/40 border border-slate-700 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/10 blur-3xl rounded-full"></div>
+        
+        <div class="relative z-10">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-white">Категорияи нав</h1>
+                <p class="text-gray-400 mt-2">Мавзӯи навро барои гурӯҳбандии китобҳо илова кунед.</p>
+            </div>
+
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Номи категория</label>
+                    <input type="text" name="name" id="name" required autofocus
+                           placeholder="Масалан: Илмӣ-тахайюлӣ, Таърихӣ..."
+                           class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition placeholder:text-gray-600">
+                </div>
+
+                <div class="flex flex-col gap-3 pt-4">
+                    <button type="submit" class="w-full btn-premium py-3.5 rounded-xl font-bold text-white shadow-lg shadow-indigo-500/20">
+                        Захира кардан
+                    </button>
+                    <a href="{% url 'list_category' %}" class="w-full text-center py-3.5 text-gray-400 hover:text-white transition font-medium">
+                        Инкор кардан
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-8 flex items-start gap-3 p-4 bg-slate-800/20 border border-slate-700 rounded-2xl">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-xs text-gray-500 leading-relaxed">
+            Ҳангоми илова кардани категорияи нав, кӯшиш кунед номи кӯтоҳ ва фаҳмо интихоб кунед. Ин ба корбарон кӯмак мекунад, ки китобҳоро зудтар пайдо кунанд.
+        </p>
+    </div>
+</div>
+{% endblock %}

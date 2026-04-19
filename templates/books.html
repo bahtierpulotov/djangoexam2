@@ -1,0 +1,434 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+  * { box-sizing: border-box; }
+
+  .page-wrapper {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 28px 24px;
+    position: sticky;
+    top: 24px;
+  }
+
+  .sidebar-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin: 0 0 20px;
+  }
+
+  .filter-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .filter-group {
+    margin-bottom: 18px;
+  }
+
+  .filter-input {
+    width: 100%;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #e2e8f0;
+    background: #0f172a;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+
+  .filter-input::placeholder { color: #475569; }
+
+  .filter-input:focus {
+    border-color: #6366f1;
+    background: #0f172a;
+  }
+
+  .price-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .price-row .filter-input {
+    width: 50%;
+  }
+
+  .btn-apply {
+    width: 100%;
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 4px;
+  }
+
+  .btn-apply:hover { background: #4f46e5; }
+
+  .btn-reset {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .btn-reset:hover { color: #ef4444; }
+
+  .result-count {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 24px;
+  }
+
+  .result-count strong {
+    color: #e2e8f0;
+    font-weight: 700;
+  }
+
+  /* GRID */
+  .books-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  /* CARD */
+  .book-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.25s, transform 0.25s;
+  }
+
+  .book-card:hover {
+    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15);
+    transform: translateY(-4px);
+    border-color: #6366f1;
+  }
+
+  /* IMAGE */
+  .card-image {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+    background: #0f172a;
+  }
+
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .book-card:hover .card-image img {
+    transform: scale(1.05);
+  }
+
+  .no-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #0f172a;
+    color: #334155;
+    gap: 10px;
+  }
+
+  .no-image svg { opacity: 0.4; }
+  .no-image span { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; }
+
+  .price-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 30px;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  /* CARD BODY */
+  .card-body {
+    padding: 20px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .category-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: #0f172a;
+    color: #6366f1;
+    border: 1px solid #312e81;
+    border-radius: 6px;
+    padding: 4px 10px;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s;
+    background: #0f172a;
+  }
+
+  .action-btn:hover.edit { color: #6366f1; border-color: #6366f1; background: #1e1b4b; }
+  .action-btn:hover.delete { color: #ef4444; border-color: #ef4444; background: #1f1315; }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin: 0 0 4px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-author {
+    font-size: 13px;
+    color: #64748b;
+    font-style: italic;
+    margin: 0 0 20px;
+  }
+
+  .btn-detail {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 18px;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #e2e8f0;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-detail:hover {
+    background: #6366f1;
+    color: #fff;
+    border-color: #6366f1;
+  }
+
+  .btn-detail svg { transition: transform 0.2s; }
+  .btn-detail:hover svg { transform: translateX(4px); }
+
+  /* EMPTY */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+    border: 2px dashed #334155;
+    border-radius: 20px;
+  }
+
+  .empty-state p {
+    font-size: 14px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 16px 0 20px;
+  }
+
+  .empty-link {
+    font-size: 13px;
+    color: #6366f1;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .empty-link:hover { text-decoration: underline; }
+</style>
+
+<div class="page-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <p class="sidebar-title">Филтрҳо</p>
+    <form method="GET">
+
+      <div class="filter-group">
+        <label class="filter-label">Ҷустуҷӯ</label>
+        <input class="filter-input" type="text" name="search"
+               value="{{ request.GET.search }}" placeholder="Номи китоб...">
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Мавзӯъ</label>
+        <select class="filter-input" name="category">
+          <option value="">Ҳама мавзӯъҳо</option>
+          {% for cat in categories %}
+            <option value="{{ cat.id }}"
+              {% if request.GET.category == cat.id|stringformat:"i" %}selected{% endif %}>
+              {{ cat.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Нарх ($)</label>
+        <div class="price-row">
+          <input class="filter-input" type="number" name="price_min"
+                 value="{{ request.GET.price_min }}" placeholder="Аз" min="0">
+          <input class="filter-input" type="number" name="price_max"
+                 value="{{ request.GET.price_max }}" placeholder="То" min="0">
+        </div>
+      </div>
+
+      <button class="btn-apply" type="submit">Иҷро кардан</button>
+
+      {% if request.GET.search or request.GET.category or request.GET.price_min or request.GET.price_max %}
+        <a class="btn-reset" href="{% url 'list_book' %}">✕ Тоза кардан</a>
+      {% endif %}
+
+    </form>
+  </aside>
+
+  <!-- MAIN -->
+  <div style="flex: 1;">
+
+    {% if request.GET.search or request.GET.category or request.GET.price_min or request.GET.price_max %}
+      <p class="result-count">Ёфт шуд: <strong>{{ books|length }} китоб</strong></p>
+    {% endif %}
+
+    <div class="books-grid">
+      {% for book in books %}
+      <div class="book-card">
+
+        <div class="card-image">
+          {% if book.cover_image %}
+            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+          {% else %}
+            <div class="no-image">
+              <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+              </svg>
+              <span>Расм нест</span>
+            </div>
+          {% endif %}
+          <div class="price-badge">${{ book.price }}</div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-top">
+            <span class="category-badge">{{ book.category.name }}</span>
+            <div class="card-actions">
+              <a class="action-btn edit" href="{% url 'update_book' book.id %}" title="Таҳрир">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+              </a>
+              <a class="action-btn delete" href="{% url 'delete_book' book.id %}" title="Нест кардан">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <h3 class="card-title">{{ book.title }}</h3>
+          <p class="card-author">@{{ book.author.full_name }}</p>
+
+          <a class="btn-detail" href="{% url 'detail_book' book.id %}">
+            Муфассал
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+      {% empty %}
+      <div class="empty-state">
+        <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#d1d5db" style="margin: 0 auto;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p>Маълумот ёфт нашуд</p>
+        <a class="empty-link" href="{% url 'list_book' %}">Ҳама китобҳоро нишон деҳ →</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

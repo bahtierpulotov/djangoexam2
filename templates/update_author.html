@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Таҳрири муаллиф - {{ author.full_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-10">
+    <a href="{% url 'detail_author' author.id %}" class="flex items-center text-sm text-gray-400 hover:text-indigo-400 transition mb-6 group">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Бозгашт ба профили муаллиф
+    </a>
+
+    <div class="bg-slate-800/40 border border-slate-700 rounded-3xl p-8 shadow-2xl relative">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-white">Таҳрири маълумот</h1>
+            <p class="text-gray-400 mt-2">Шумо маълумоти муаллиф <span class="text-indigo-400 font-bold">{{ author.full_name }}</span>-ро тағйир дода истодаед.</p>
+        </div>
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+
+            <div>
+                <label for="full_name" class="block text-sm font-medium text-gray-300 mb-2">Ному насаби пурра</label>
+                <input type="text" name="full_name" id="full_name" required 
+                       value="{{ author.full_name }}"
+                       class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition">
+            </div>
+
+            <div>
+                <label for="bio" class="block text-sm font-medium text-gray-300 mb-2">Дар бораи муаллиф (Био)</label>
+                <textarea name="bio" id="bio" rows="8" required
+                          class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition resize-none">{{ author.bio }}</textarea>
+            </div>
+
+            <div class="flex items-center gap-4 pt-4">
+                <button type="submit" class="flex-1 btn-premium py-4 rounded-xl font-bold text-white shadow-lg">
+                    Навсозӣ кардан
+                </button>
+                <a href="{% url 'list_author' %}" class="px-6 py-4 text-gray-400 hover:text-white transition font-medium">
+                    Инкор
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

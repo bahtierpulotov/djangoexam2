@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Иловаи Шарҳ - {{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-10">
+    <div class="flex items-center gap-6 mb-10 p-6 bg-slate-800/20 border border-slate-700 rounded-3xl">
+        {% if book.cover_image %}
+            <img src="{{ book.cover_image.url }}" class="w-20 h-28 object-cover rounded-lg shadow-lg">
+        {% endif %}
+        <div>
+            <h2 class="text-xl font-bold text-white">{{ book.title }}</h2>
+            <p class="text-gray-400 text-sm">Муаллиф: {{ book.author.full_name }}</p>
+        </div>
+    </div>
+
+    <div class="bg-slate-800/40 border border-slate-700 rounded-3xl p-8 shadow-2xl relative">
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-white">Шарҳи шумо</h1>
+            <p class="text-gray-400 mt-2">Фикру мулоҳизаҳои худро дар бораи ин китоб нависед.</p>
+        </div>
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">Баҳои шумо</label>
+                <div class="flex gap-4">
+                    {% for i in "12345" %}
+                    <label class="relative cursor-pointer group">
+                        <input type="radio" name="rating" value="{{ i }}" required class="peer sr-only">
+                        <div class="w-12 h-12 flex items-center justify-center bg-slate-900 border border-slate-700 rounded-xl text-gray-400 peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-500 group-hover:border-indigo-400 transition-all font-bold">
+                            {{ i }}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+                <p class="text-xs text-gray-500 mt-2 italic">* 1 - Хеле бад, 5 - Олӣ</p>
+            </div>
+
+            <div>
+                <label for="text" class="block text-sm font-medium text-gray-300 mb-2">Матни шарҳ</label>
+                <textarea name="text" id="text" rows="5" required
+                          placeholder="Таассуроти худро муфассал нависед..."
+                          class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition resize-none placeholder:text-gray-600"></textarea>
+            </div>
+
+            <div class="flex items-center gap-4 pt-4">
+                <button type="submit" class="flex-1 btn-premium py-4 rounded-xl font-bold text-white">
+                    Фиристодан
+                </button>
+                <a href="{% url 'detail_book' book.id %}" class="px-6 py-4 text-gray-400 hover:text-white transition font-medium">
+                    Инкор
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

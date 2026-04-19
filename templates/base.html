@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BookHub - Китобхонаи Рақамӣ{% endblock %}</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px #6366f1;
+        }
+
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen flex flex-col">
+
+    <nav class="glass-nav sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                
+                <div class="flex items-center">
+                    <a href="{% url 'home' %}" class="text-2xl font-black tracking-tighter text-white">
+                        BOOK<span class="text-indigo-500">HUB</span>
+                    </a>
+                </div>
+
+                <div class="hidden md:flex space-x-8 items-center font-medium text-sm">
+                    <a href="{% url 'list_book' %}" class="hover:text-indigo-400 transition">Китобҳо</a>
+                    <a href="{% url 'list_category' %}" class="hover:text-indigo-400 transition">Категорияҳо</a>
+                    <a href="{% url 'list_author' %}" class="hover:text-indigo-400 transition">Муаллифон</a>
+                    <a href="{% url 'statistics' %}" class="hover:text-indigo-400 transition">Статистика</a>
+                    
+                    {% if request.session.user_id %}
+                        <div class="flex items-center space-x-6 border-l border-slate-700 pl-6">
+                            <a href="{% url 'add_book' %}" class="btn-premium px-4 py-2 rounded-xl text-white text-xs font-bold">
+                                + ИЛОВАИ КИТОБ
+                            </a>
+                            
+                            <a href="{% url 'change_password' %}" class="text-slate-400 hover:text-white transition" title="Ивази парол">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                                </svg>
+                            </a>
+
+                            <a href="{% url 'logout' %}" class="text-slate-400 hover:text-red-400 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="flex items-center space-x-4">
+                            <a href="{% url 'login' %}" class="text-slate-400 hover:text-white transition">Воридшавӣ</a>
+                            <a href="{% url 'register' %}" class="bg-white text-slate-900 px-5 py-2 rounded-xl font-bold hover:bg-slate-200 transition">
+                                Сабти ном
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 mt-6">
+        {% for message in messages %}
+        <div class="p-4 rounded-xl {% if message.tags == 'success' %}bg-emerald-500/10 text-emerald-400 border border-emerald-500/20{% else %}bg-red-500/10 text-red-400 border border-red-500/20{% endif %} mb-4 flex justify-between">
+            {{ message }}
+            <button onclick="this.parentElement.remove()" class="font-bold">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="border-t border-slate-800 py-10 mt-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-slate-500 text-sm">
+                &copy; 2026 BookHub Project. Сохта шудааст барои имтиҳон.
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

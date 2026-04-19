@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Категорияҳо - BookHub{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+    
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+            <h1 class="text-4xl font-black text-white tracking-tight">Категорияҳои китоб</h1>
+            <p class="text-gray-400 mt-2 text-lg">Китобҳоро аз рӯи мавзӯъ интихоб кунед.</p>
+        </div>
+        
+        <a href="{% url 'add_category' %}" class="btn-premium px-8 py-4 rounded-2xl text-white font-bold shadow-lg shadow-indigo-500/20 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Категорияи нав
+        </a>
+    </div>
+
+    <div class="relative max-w-md">
+        <input type="text" id="categorySearch" placeholder="Ҷустуҷӯи категория..." 
+               class="w-full bg-slate-800/40 border border-slate-700 rounded-2xl px-12 py-4 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 absolute left-4 top-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for category in categories %}
+        <div class="bg-slate-800/30 border border-slate-700 rounded-3xl p-8 hover:border-indigo-500/50 transition-all duration-300 relative overflow-hidden group">
+            
+            <div class="relative z-10">
+                <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-400 mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                </div>
+                
+                <h3 class="text-2xl font-bold text-white mb-1">{{ category.name }}</h3>
+                <p class="text-gray-500 text-sm mb-6 italic">Китобҳои мавҷуда: {{ category.book_set.count }}</p>
+                
+                <div class="flex items-center justify-between pt-6 border-t border-slate-700/50">
+                    <a href="{% url 'detail_category' category.id %}" class="text-xs font-black text-indigo-400 hover:text-white transition uppercase tracking-widest">
+                        Дидан &rarr;
+                    </a>
+                    
+                    <div class="flex gap-2">
+                        <a href="{% url 'update_category' category.id %}" class="p-2 bg-emerald-500/10 text-emerald-500 rounded-lg hover:bg-emerald-500 hover:text-white transition" title="Таҳрир">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </a>
+                        <a href="{% url 'delete_category' category.id %}" class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition" title="Нест кардан">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-indigo-600/5 blur-3xl rounded-full group-hover:bg-indigo-600/15 transition-all"></div>
+        </div>
+        {% empty %}
+        <div class="col-span-full py-20 text-center border-2 border-dashed border-slate-800 rounded-3xl">
+            <p class="text-gray-500">Ягон категория ёфт нашуд.</p>
+            <a href="{% url 'add_category' %}" class="text-indigo-400 hover:underline mt-2 inline-block">Аввалинро илова кунед</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.getElementById('categorySearch').addEventListener('input', function(e) {
+        let term = e.target.value.toLowerCase();
+        let cards = document.querySelectorAll('.grid > div:not(.col-span-full)');
+        cards.forEach(card => {
+            let name = card.querySelector('h3').textContent.toLowerCase();
+            card.style.display = name.includes(term) ? 'block' : 'none';
+        });
+    });
+</script>
+{% endblock %}

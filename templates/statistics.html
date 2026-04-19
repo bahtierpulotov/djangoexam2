@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Статистикаи Китобхона - BookHub{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+    
+    <div class="border-b border-slate-800 pb-6">
+        <h1 class="text-3xl font-black text-white uppercase tracking-wider">Статистикаи Умумӣ</h1>
+        <p class="text-gray-500 mt-2">Таҳлили рақамии махзани китобҳо ва фаъолияти муаллифон.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-slate-800/40 border border-slate-700 p-8 rounded-3xl relative overflow-hidden group">
+            <div class="relative z-10">
+                <p class="text-sm font-bold text-indigo-400 uppercase tracking-widest mb-2">Умумии китобҳо</p>
+                <h2 class="text-5xl font-black text-white">{{ total_books }}</h2>
+            </div>
+            <div class="absolute -right-4 -bottom-4 text-slate-700/20 group-hover:text-indigo-500/10 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="bg-slate-800/40 border border-slate-700 p-8 rounded-3xl relative overflow-hidden group">
+            <div class="relative z-10">
+                <p class="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-2">Нархи миёна</p>
+                <h2 class="text-5xl font-black text-white">${{ avg_price|stringformat:".2f" }}</h2>
+            </div>
+            <div class="absolute -right-4 -bottom-4 text-slate-700/20 group-hover:text-emerald-500/10 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="bg-slate-800/40 border border-slate-700 p-8 rounded-3xl relative overflow-hidden group">
+            <div class="relative z-10">
+                <p class="text-sm font-bold text-amber-400 uppercase tracking-widest mb-2">Баҳои миёна</p>
+                <h2 class="text-5xl font-black text-white">{{ avg_rating }}</h2> </div>
+            <div class="absolute -right-4 -bottom-4 text-slate-700/20 group-hover:text-amber-500/10 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.54 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.784.57-1.838-.197-1.539-1.118l1.518-4.674a1 1 0 00-.363-1.1１８l-3.976-2.888c-.784-.57-.38-１．８１．５８８－１．８１h４．９１４a１ １ ０ ００．９５１－．６９l１．５１９－４．６７４z" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div class="bg-slate-800/20 border border-slate-800 rounded-3xl p-8">
+            <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4">Муаллифони фаъолтарин</h3>
+            <div class="space-y-4">
+                {% for author in top_authors %}
+                <div class="flex items-center justify-between p-4 bg-slate-900/50 rounded-2xl border border-slate-800 hover:border-indigo-500/30 transition-colors">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-indigo-600/20 text-indigo-400 rounded-xl flex items-center justify-center font-black">
+                            {{ forloop.counter }}
+                        </div>
+                        <span class="text-white font-medium">{{ author.full_name }}</span>
+                    </div>
+                    <span class="text-sm bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full font-bold">
+                        {{ author.count }} китоб
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        
+    </div>
+
+</div>
+{% endblock %}
