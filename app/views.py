@@ -304,6 +304,17 @@ def detail_book(request, id):
 def update_book(request, id):
     if not request.session.get('user_id'):
         return redirect('login')
+    
+
+
+    book = get_object_or_404(Book, id=id)
+    current_user = get_object_or_404(User, id=request.session['user_id'])
+    if book.created_by.id != current_user.id and not current_user.is_staff:
+        messages.error(request, "Шумо ҳуқуқи таҳрир кардани ин китобро надоред!")
+        return redirect('list_book')
+    
+
+
     book = get_object_or_404(Book, id=id)
     if request.method == "POST":
         title       = request.POST.get('title', '').strip()
@@ -333,6 +344,14 @@ def update_book(request, id):
 def delete_book(request, id):
     if not request.session.get('user_id'):
         return redirect('login')
+    
+    book = get_object_or_404(Book, id=id)
+    current_user = get_object_or_404(User, id=request.session['user_id'])
+    if book.created_by.id != current_user.id and not current_user.is_staff:
+        messages.error(request, "Шумо ҳуқуқи нест кардани ин китобро надоред!")
+        return redirect('list_book')
+
+
     book = get_object_or_404(Book, id=id)
     if request.method == "POST":
         book.delete()
